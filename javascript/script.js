@@ -215,7 +215,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- GỌI API ĐẾN HUGGING FACE BACKEND ---
         try {
             // !!! THAY THẾ URL NÀY BẰNG URL CỦA HUGGING FACE SPACE CỦA BẠN !!!
-            const API_ENDPOINT = "https://hungbb-egov-bot-backend.hf.space";
+            const API_ENDPOINT = "https://hungbb-egov-bot-backend.hf.space/chat";
+
 
             const response = await fetch(API_ENDPOINT, {
                 method: 'POST',
