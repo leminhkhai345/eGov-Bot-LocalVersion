@@ -1,23 +1,48 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Biến để lưu trữ toàn bộ dữ liệu thủ tục
     let allProcedures = [];
+
+    // --- TẢI DỮ LIỆU TỪ FILE JSON ---
+    // QUAN TRỌNG: Đảm bảo file 'toan_bo_du_lieu_final.json' nằm chung thư mục
     fetch('./toan_bo_du_lieu_final.json')
-        .then(response => response.ok ? response.json() : Promise.reject('File not found'))
+        .then(response => {
+            if (!response.ok) {
+                // Nếu không tìm thấy file, báo lỗi
+                throw new Error('Lỗi mạng hoặc không tìm thấy file toan_bo_du_lieu_final.json');
+            }
+            return response.json();
+        })
         .then(data => {
             allProcedures = data;
-            console.log(`Tải thành công ${allProcedures.length} thủ tục.`);
+            console.log(`Tải thành công ${allProcedures.length} thủ tục từ file JSON.`);
         })
         .catch(error => {
-            console.error('Lỗi khi tải file JSON:', error);
-            alert('Không thể tải cơ sở dữ liệu thủ tục. Chức năng tìm kiếm sẽ không hoạt động.');
+            console.error('Lỗi nghiêm trọng khi tải file dữ liệu:', error);
+            // Hiển thị thông báo lỗi cho người dùng
+            alert('Không thể tải được cơ sở dữ liệu thủ tục. Vui lòng kiểm tra lại file và đường dẫn. Chức năng tìm kiếm sẽ không hoạt động.');
         });
 
+    // --- Lấy các phần tử DOM ---
     const getEl = (id) => document.getElementById(id);
+
     const startChatBtn = getEl('start-chat-btn');
     const chatbotContainer = getEl('chatbot-container');
     const infoModal = getEl('info-modal');
-    
+    const searchForm = getEl('search-form');
+    const searchInput = getEl('search-input');
+    const resultsContainer = getEl('results-container');
+    const resultsTitle = getEl('results-title');
+    const resultsList = getEl('results-list');
+    const homeLink = getEl('home-link');
+    const guideBtn = getEl('guide-btn');
+    const contactBtn = getEl('contact-btn');
+    const chatForm = getEl('chat-form');
+    const chatInput = getEl('chat-input');
+    const chatMessagesContainer = getEl('chat-messages');
+
     let lastTriggerElement = null;
 
+    // --- LOGIC MỞ/ĐÓNG CÁC POPUP (MODAL) ---
     const openModal = (modalElement, triggerElement) => {
         lastTriggerElement = triggerElement;
         const rect = triggerElement.getBoundingClientRect();
@@ -54,13 +79,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { once: true });
     };
 
-    getEl('guide-btn').addEventListener('click', (e) => {
+    // Gán sự kiện cho các nút
+    guideBtn.addEventListener('click', (e) => {
         getEl('info-modal-title').innerHTML = 'Hướng dẫn sử dụng';
         getEl('info-modal-body').innerHTML = `<ul class="list-disc space-y-4 pl-5"><li><strong>Tìm kiếm:</strong> Sử dụng thanh tìm kiếm ở trang chủ để tìm nhanh các thủ tục hành chính theo từ khóa.</li><li><strong>Trò chuyện:</strong> Nhấn nút "Bắt đầu Trò chuyện" để tương tác với trợ lý ảo eGov-Bot.</li><li><strong>Hỏi đáp:</strong> Đặt các câu hỏi rõ ràng, ngắn gọn để nhận được câu trả lời chính xác nhất về các thủ tục bạn quan tâm.</li></ul>`;
         openModal(infoModal, e.currentTarget);
     });
 
-    getEl('contact-btn').addEventListener('click', (e) => {
+    contactBtn.addEventListener('click', (e) => {
         getEl('info-modal-title').innerHTML = 'Thông tin liên hệ';
         getEl('info-modal-body').innerHTML = `<ul class="list-disc space-y-4 pl-5">
                                                 <li>
@@ -83,25 +109,30 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.querySelector('.modal-overlay').addEventListener('click', () => closeModal(modal));
         modal.querySelector('.modal-close, #close-chat-btn')?.addEventListener('click', () => closeModal(modal));
     });
-    
-    getEl('home-link').addEventListener('click', (e) => { e.preventDefault(); window.location.reload(); });
+
+    homeLink.addEventListener('click', (e) => { e.preventDefault(); window.location.reload(); });
     startChatBtn.addEventListener('click', (e) => openModal(chatbotContainer, e.currentTarget));
-    
-    getEl('search-form').addEventListener('submit', (e) => {
+
+    // --- LOGIC TÌM KIẾM ---
+    searchForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const keyword = getEl('search-input').value.trim().toLowerCase();
-        const resultsList = getEl('results-list');
-        resultsList.innerHTML = '';
+        const keyword = searchInput.value.trim().toLowerCase();
+        resultsList.innerHTML = ''; // Xóa kết quả cũ
+
         if (keyword) {
-            const filtered = allProcedures.filter(item => item.ten_thu_tuc?.toLowerCase().includes(keyword));
+            const filtered = allProcedures.filter(item =>
+                item.ten_thu_tuc?.toLowerCase().includes(keyword)
+            );
+
             if (filtered.length > 0) {
-                getEl('results-title').textContent = `Kết quả (${filtered.length}):`;
+                resultsTitle.textContent = `Kết quả (${filtered.length}):`;
                 filtered.forEach((item) => {
                     const li = document.createElement('li');
                     li.className = 'p-3 border border-white/10 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-sm cursor-pointer';
                     li.textContent = item.ten_thu_tuc;
+
+                    // Thêm sự kiện click để hiển thị chi tiết
                     li.addEventListener('click', (e_li) => {
-                        // --- PHẦN CODE ĐƯỢC CẬP NHẬT ---
                         const procedureContent = `
                             <div class="space-y-6 text-white/90">
                                 <div>
@@ -140,19 +171,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     resultsList.appendChild(li);
                 });
             } else {
-                getEl('results-title').textContent = 'Không tìm thấy kết quả nào.';
+                resultsTitle.textContent = 'Không tìm thấy kết quả nào.';
             }
-            getEl('results-container').classList.remove('hidden');
+            resultsContainer.classList.remove('hidden');
         } else {
-            getEl('results-container').classList.add('hidden');
+            resultsContainer.classList.add('hidden');
         }
     });
-    
-    // Chat Logic
+
+    // --- LOGIC CHAT (GIẢ LẬP) ---
     let messages = [{ role: "assistant", content: "Chào bạn, tôi là trợ lý ảo eGov-Bot." }];
-    const chatMessagesContainer = getEl('chat-messages');
-    const chatForm = getEl('chat-form');
-    const chatInput = getEl('chat-input');
 
     const renderMessages = () => {
         chatMessagesContainer.innerHTML = '';
@@ -166,24 +194,54 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     renderMessages();
 
-    chatForm.addEventListener('submit', (e) => {
+    // --- LOGIC CHAT ĐÃ NÂNG CẤP ĐỂ GỌI API ---
+    chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const userText = chatInput.value.trim();
         if (userText === '') return;
+
+        // Thêm tin nhắn của người dùng vào giao diện
         messages.push({ role: 'user', content: userText });
         renderMessages();
         chatInput.value = '';
-        setTimeout(() => {
-            const typingIndicator = document.createElement('div');
-            typingIndicator.className = 'flex items-end gap-2 max-w-[80%] self-start';
-            typingIndicator.innerHTML = `<div class="px-4 py-2 rounded-2xl bg-[#4d4d4d] text-white/90 rounded-bl-none"><div class="flex items-center gap-1"><span class="w-2 h-2 bg-white/50 rounded-full animate-bounce" style="animation-delay: 0s;"></span><span class="w-2 h-2 bg-white/50 rounded-full animate-bounce" style="animation-delay: 0.15s;"></span><span class="w-2 h-2 bg-white/50 rounded-full animate-bounce" style="animation-delay: 0.3s;"></span></div></div>`;
-            chatMessagesContainer.appendChild(typingIndicator);
-            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
-            setTimeout(() => {
-                chatMessagesContainer.removeChild(typingIndicator);
-                messages.push({ role: 'assistant', content: 'Chức năng trò chuyện AI đang được phát triển.' });
-                renderMessages();
-            }, 2000);
-        }, 500);
+
+        // Hiển thị hiệu ứng "đang gõ"
+        const typingIndicator = document.createElement('div');
+        typingIndicator.className = 'flex items-end gap-2 max-w-[80%] self-start';
+        typingIndicator.innerHTML = `<div class="px-4 py-2 rounded-2xl bg-[#4d4d4d] text-white/90 rounded-bl-none"><div class="flex items-center gap-1"><span class="w-2 h-2 bg-white/50 rounded-full animate-bounce" style="animation-delay: 0s;"></span><span class="w-2 h-2 bg-white/50 rounded-full animate-bounce" style="animation-delay: 0.15s;"></span><span class="w-2 h-2 bg-white/50 rounded-full animate-bounce" style="animation-delay: 0.3s;"></span></div></div>`;
+        chatMessagesContainer.appendChild(typingIndicator);
+        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+
+        // --- GỌI API ĐẾN HUGGING FACE BACKEND ---
+        try {
+            // !!! THAY THẾ URL NÀY BẰNG URL CỦA HUGGING FACE SPACE CỦA BẠN !!!
+            const API_ENDPOINT = "https://hungbb-egov-bot-backend.hf.space";
+
+            const response = await fetch(API_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    question: userText,
+                    session_id: "user123" // Gửi một session_id để duy trì hội thoại
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Lỗi kết nối đến máy chủ AI');
+            }
+
+            const data = await response.json();
+            messages.push({ role: 'assistant', content: data.answer });
+
+        } catch (error) {
+            console.error('Lỗi:', error);
+            messages.push({ role: 'assistant', content: 'Xin lỗi, tôi đang gặp sự cố kết nối. Vui lòng thử lại sau.' });
+        } finally {
+            // Xóa hiệu ứng "đang gõ" và hiển thị lại toàn bộ tin nhắn
+            chatMessagesContainer.removeChild(typingIndicator);
+            renderMessages();
+        }
     });
 });
