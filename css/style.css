@@ -92,3 +92,65 @@ body {
 .custom-scrollbar::-webkit-scrollbar { width: 6px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); }
 .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 3px; }
+
+/* === ĐỊNH DẠNG CHO NỘI DUNG CHATBOT (MARKDOWN) === */
+.prose {
+    /* Đảm bảo màu chữ mặc định là màu trắng */
+    color: #E5E7EB; /* Tương đương text-gray-200 */
+}
+
+/* Định dạng các thẻ tiêu đề (nếu có) */
+.prose h1, .prose h2, .prose h3, .prose h4 {
+    color: white;
+}
+
+/* Định dạng chữ in đậm */
+.prose strong {
+    color: white;
+    font-weight: 600;
+}
+
+/* Định dạng danh sách */
+.prose ul {
+    list-style-type: disc;
+    padding-left: 1.5rem; /* Căn lề cho các dấu chấm đầu dòng */
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.prose ul li {
+    margin-top: 0.25rem;
+}
+
+/* Định dạng các đường link */
+.prose a {
+    color: #FBBF24; /* Màu vàng giống trong project của bạn */
+    text-decoration: underline;
+}
+
+.prose a:hover {
+    color: #F59E0B;
+}
+
+/* Xóa bỏ định dạng mặc định cho thẻ p để không bị thừa khoảng cách */
+.prose p {
+    margin: 0;
+}
+
+/* === HIỆU ỨNG HIỂN THỊ TIN NHẮN MỚI === */
+/* Định nghĩa các bước của hiệu ứng */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px); /* Bắt đầu từ vị trí thấp hơn 15px */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); /* Kết thúc ở vị trí ban đầu */
+  }
+}
+
+/* Class để áp dụng hiệu ứng */
+.message-enter-active {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
