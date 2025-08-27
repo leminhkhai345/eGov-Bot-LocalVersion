@@ -182,49 +182,58 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- LOGIC CHAT (GIẢ LẬP) ---
     let messages = [{ role: "assistant", content: "Chào bạn, tôi là trợ lý ảo eGov-Bot." }];
 
+
+
     const renderMessages = () => {
         chatMessagesContainer.innerHTML = '';
         messages.forEach(msg => {
             const msgDiv = document.createElement('div');
             msgDiv.className = `flex items-end gap-2 max-w-[80%] ${msg.role === 'user' ? 'self-end flex-row-reverse' : 'self-start'}`;
-            msgDiv.innerHTML = `<div class="px-4 py-2 rounded-2xl ${msg.role === 'user' ? 'bg-[#ff6f00] text-white rounded-br-none' : 'bg-[#4d4d4d] text-white/90 rounded-bl-none'}">${msg.content}</div>`;
+
+            // --- PHẦN NÂNG CẤP ---
+            // Chỉ chuyển đổi Markdown cho tin nhắn của 'assistant' (trợ lý ảo)
+            // Tin nhắn của người dùng vẫn hiển thị như văn bản thường
+            const messageContent = msg.role === 'assistant' 
+                ? marked.parse(msg.content) 
+                : msg.content;
+            
+            // Thêm một class 'prose' để định dạng nội dung HTML tốt hơn
+            msgDiv.innerHTML = `<div class="prose px-4 py-2 rounded-2xl ${msg.role === 'user' ? 'bg-[#ff6f00] text-white rounded-br-none' : 'bg-[#4d4d4d] text-white/90 rounded-bl-none'}">${messageContent}</div>`;
+            // --- KẾT THÚC NÂNG CẤP ---
+
             chatMessagesContainer.appendChild(msgDiv);
         });
         chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
     };
     renderMessages();
 
+    
     // --- LOGIC CHAT ĐÃ NÂNG CẤP ĐỂ GỌI API ---
     chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const userText = chatInput.value.trim();
         if (userText === '') return;
 
-        // Thêm tin nhắn của người dùng vào giao diện
+        // Hiển thị tin nhắn người dùng
         messages.push({ role: 'user', content: userText });
         renderMessages();
         chatInput.value = '';
 
-        // Hiển thị hiệu ứng "đang gõ"
+        // Hiển thị hiệu ứng "đang gõ..."
         const typingIndicator = document.createElement('div');
         typingIndicator.className = 'flex items-end gap-2 max-w-[80%] self-start';
         typingIndicator.innerHTML = `<div class="px-4 py-2 rounded-2xl bg-[#4d4d4d] text-white/90 rounded-bl-none"><div class="flex items-center gap-1"><span class="w-2 h-2 bg-white/50 rounded-full animate-bounce" style="animation-delay: 0s;"></span><span class="w-2 h-2 bg-white/50 rounded-full animate-bounce" style="animation-delay: 0.15s;"></span><span class="w-2 h-2 bg-white/50 rounded-full animate-bounce" style="animation-delay: 0.3s;"></span></div></div>`;
         chatMessagesContainer.appendChild(typingIndicator);
         chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 
-        // --- GỌI API ĐẾN HUGGING FACE BACKEND ---
         try {
-            // !!! THAY THẾ URL NÀY BẰNG URL CỦA HUGGING FACE SPACE CỦA BẠN !!!
             const API_ENDPOINT = "https://hungbb-egov-bot-backend.hf.space/chat";
-
             const response = await fetch(API_ENDPOINT, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     question: userText,
-                    session_id: "user123" // Gửi một session_id để duy trì hội thoại
+                    session_id: "user123"
                 }),
             });
 
@@ -233,15 +242,41 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const data = await response.json();
+            
+            // Xóa hiệu ứng "đang gõ"
+            chatMessagesContainer.removeChild(typingIndicator);
+
+            // Thêm toàn bộ câu trả lời vào mảng messages
             messages.push({ role: 'assistant', content: data.answer });
+            
+            // Hiển thị lại toàn bộ tin nhắn
+            renderMessages();
+
+            // --- PHẦN THAY ĐỔI LOGIC CUỘN ---
+            const assistantMessageElement = chatMessagesContainer.lastElementChild;
+            if (assistantMessageElement) {
+                // Vẫn kích hoạt hiệu ứng cho tin nhắn mới (câu trả lời)
+                assistantMessageElement.classList.add('message-enter-active');
+                
+                // Tìm đến tin nhắn của người dùng (nằm ngay trước câu trả lời)
+                const userMessageElement = assistantMessageElement.previousElementSibling;
+                
+                // Cuộn đến tin nhắn của người dùng thay vì tin nhắn của bot
+                if (userMessageElement) {
+                    userMessageElement.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+            }
+            // --- KẾT THÚC THAY ĐỔI ---
 
         } catch (error) {
             console.error('Lỗi:', error);
+            if (chatMessagesContainer.contains(typingIndicator)) {
+                chatMessagesContainer.removeChild(typingIndicator);
+            }
             messages.push({ role: 'assistant', content: 'Xin lỗi, tôi đang gặp sự cố kết nối. Vui lòng thử lại sau.' });
-        } finally {
-            // Xóa hiệu ứng "đang gõ" và hiển thị lại toàn bộ tin nhắn
-            chatMessagesContainer.removeChild(typingIndicator);
             renderMessages();
         }
     });
 });
+
+
