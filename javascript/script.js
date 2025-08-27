@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+
     // Biến để lưu trữ toàn bộ dữ liệu thủ tục
     let allProcedures = [];
 
@@ -39,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatForm = getEl('chat-form');
     const chatInput = getEl('chat-input');
     const chatMessagesContainer = getEl('chat-messages');
+    
 
     let lastTriggerElement = null;
 
@@ -185,26 +187,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     const renderMessages = () => {
-        chatMessagesContainer.innerHTML = '';
-        messages.forEach(msg => {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `flex items-end gap-2 max-w-[80%] ${msg.role === 'user' ? 'self-end flex-row-reverse' : 'self-start'}`;
+    chatMessagesContainer.innerHTML = '';
+    messages.forEach(msg => {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `flex items-end gap-2 max-w-[80%] ${msg.role === 'user' ? 'self-end flex-row-reverse' : 'self-start'}`;
 
-            // --- PHẦN NÂNG CẤP ---
-            // Chỉ chuyển đổi Markdown cho tin nhắn của 'assistant' (trợ lý ảo)
-            // Tin nhắn của người dùng vẫn hiển thị như văn bản thường
-            const messageContent = msg.role === 'assistant' 
-                ? marked.parse(msg.content) 
-                : msg.content;
-            
-            // Thêm một class 'prose' để định dạng nội dung HTML tốt hơn
-            msgDiv.innerHTML = `<div class="prose px-4 py-2 rounded-2xl ${msg.role === 'user' ? 'bg-[#ff6f00] text-white rounded-br-none' : 'bg-[#4d4d4d] text-white/90 rounded-bl-none'}">${messageContent}</div>`;
-            // --- KẾT THÚC NÂNG CẤP ---
+        const messageContent = msg.role === 'assistant' 
+            ? marked.parse(msg.content) 
+            : msg.content;
+        
+        msgDiv.innerHTML = `<div class="prose px-4 py-2 rounded-2xl ${msg.role === 'user' ? 'bg-[#ff6f00] text-white rounded-br-none' : 'bg-[#4d4d4d] text-white/90 rounded-bl-none'}">${messageContent}</div>`;
 
-            chatMessagesContainer.appendChild(msgDiv);
+        chatMessagesContainer.appendChild(msgDiv);
+
+
+        const links = msgDiv.querySelectorAll('a');
+        // Lặp qua từng thẻ và thêm thuộc tính
+        links.forEach(link => {
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
         });
-        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
-    };
+        // =========================================================
+
+    });
+    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+};
     renderMessages();
 
     
