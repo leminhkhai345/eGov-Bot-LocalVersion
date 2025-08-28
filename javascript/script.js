@@ -4,11 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let allProcedures = [];
 
     // --- TẢI DỮ LIỆU TỪ FILE JSON ---
-    // QUAN TRỌNG: Đảm bảo file 'toan_bo_du_lieu_final.json' nằm chung thư mục
     fetch('./toan_bo_du_lieu_final.json')
         .then(response => {
             if (!response.ok) {
-                // Nếu không tìm thấy file, báo lỗi
                 throw new Error('Lỗi mạng hoặc không tìm thấy file toan_bo_du_lieu_final.json');
             }
             return response.json();
@@ -19,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => {
             console.error('Lỗi nghiêm trọng khi tải file dữ liệu:', error);
-            // Hiển thị thông báo lỗi cho người dùng
             alert('Không thể tải được cơ sở dữ liệu thủ tục. Vui lòng kiểm tra lại file và đường dẫn. Chức năng tìm kiếm sẽ không hoạt động.');
         });
 
@@ -40,6 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatForm = getEl('chat-form');
     const chatInput = getEl('chat-input');
     const chatMessagesContainer = getEl('chat-messages');
+    const homeLinkMobile = getEl('home-link-mobile');
+    const guideBtnMobile = getEl('guide-btn-mobile');
+    const contactBtnMobile = getEl('contact-btn-mobile');
     
 
     let lastTriggerElement = null;
@@ -81,14 +81,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { once: true });
     };
 
-    // Gán sự kiện cho các nút
-    guideBtn.addEventListener('click', (e) => {
+    // --- Gán sự kiện cho các nút ---
+    const showGuideModal = (e) => {
         getEl('info-modal-title').innerHTML = 'Hướng dẫn sử dụng';
         getEl('info-modal-body').innerHTML = `<ul class="list-disc space-y-4 pl-5"><li><strong>Tìm kiếm:</strong> Sử dụng thanh tìm kiếm ở trang chủ để tìm nhanh các thủ tục hành chính theo từ khóa.</li><li><strong>Trò chuyện:</strong> Nhấn nút "Bắt đầu Trò chuyện" để tương tác với trợ lý ảo eGov-Bot.</li><li><strong>Hỏi đáp:</strong> Đặt các câu hỏi rõ ràng, ngắn gọn để nhận được câu trả lời chính xác nhất về các thủ tục bạn quan tâm.</li></ul>`;
         openModal(infoModal, e.currentTarget);
-    });
+    };
 
-    contactBtn.addEventListener('click', (e) => {
+    const showContactModal = (e) => {
         getEl('info-modal-title').innerHTML = 'Thông tin liên hệ';
         getEl('info-modal-body').innerHTML = `<ul class="list-disc space-y-4 pl-5">
                                                 <li>
@@ -105,7 +105,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                                 </li>
                                             </ul>`;
         openModal(infoModal, e.currentTarget);
-    });
+    };
+
+    guideBtn.addEventListener('click', showGuideModal);
+    guideBtnMobile.addEventListener('click', showGuideModal);
+    contactBtn.addEventListener('click', showContactModal);
+    contactBtnMobile.addEventListener('click', showContactModal);
 
     document.querySelectorAll('.modal').forEach(modal => {
         modal.querySelector('.modal-overlay').addEventListener('click', () => closeModal(modal));
@@ -113,13 +118,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     homeLink.addEventListener('click', (e) => { e.preventDefault(); window.location.reload(); });
+    homeLinkMobile.addEventListener('click', (e) => { e.preventDefault(); window.location.reload(); });
     startChatBtn.addEventListener('click', (e) => openModal(chatbotContainer, e.currentTarget));
 
     // --- LOGIC TÌM KIẾM ---
     searchForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const keyword = searchInput.value.trim().toLowerCase();
-        resultsList.innerHTML = ''; // Xóa kết quả cũ
+        resultsList.innerHTML = '';
 
         if (keyword) {
             const filtered = allProcedures.filter(item =>
@@ -132,39 +138,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     const li = document.createElement('li');
                     li.className = 'p-3 border border-white/10 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-sm cursor-pointer';
                     li.textContent = item.ten_thu_tuc;
-
-                    // Thêm sự kiện click để hiển thị chi tiết
                     li.addEventListener('click', (e_li) => {
                         const procedureContent = `
                             <div class="space-y-6 text-white/90">
-                                <div>
-                                    <h4 class="font-semibold text-amber-400 mb-2 text-lg">Cơ quan thực hiện</h4>
-                                    <p class="whitespace-pre-wrap text-base">${item.co_quan_thuc_hien || 'Chưa có thông tin'}</p>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-amber-400 mb-2 text-lg">Yêu cầu, điều kiện</h4>
-                                    <p class="whitespace-pre-wrap text-base">${item.yeu_cau_dieu_kien || 'Chưa có thông tin'}</p>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-amber-400 mb-2 text-lg">Thành phần hồ sơ</h4>
-                                    <p class="whitespace-pre-wrap text-base">${item.thanh_phan_ho_so || 'Chưa có thông tin'}</p>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-amber-400 mb-2 text-lg">Trình tự thực hiện</h4>
-                                    <p class="whitespace-pre-wrap text-base">${item.trinh_tu_thuc_hien || 'Chưa có thông tin'}</p>
-                                </div>
-                                 <div>
-                                    <h4 class="font-semibold text-amber-400 mb-2 text-lg">Cách thức thực hiện</h4>
-                                    <p class="whitespace-pre-wrap text-base">${item.cach_thuc_thuc_hien || 'Chưa có thông tin'}</p>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-amber-400 mb-2 text-lg">Thủ tục liên quan</h4>
-                                    <p class="whitespace-pre-wrap text-base">${item.thu_tuc_lien_quan || 'Không có'}</p>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-amber-400 mb-2 text-lg">Nguồn</h4>
-                                    <a href="${item.nguon || '#'}" target="_blank" class="text-blue-400 hover:underline break-all">${item.nguon || 'Không có'}</a>
-                                </div>
+                                <div><h4 class="font-semibold text-amber-400 mb-2 text-lg">Cơ quan thực hiện</h4><p class="whitespace-pre-wrap text-base">${item.co_quan_thuc_hien || 'Chưa có thông tin'}</p></div>
+                                <div><h4 class="font-semibold text-amber-400 mb-2 text-lg">Yêu cầu, điều kiện</h4><p class="whitespace-pre-wrap text-base">${item.yeu_cau_dieu_kien || 'Chưa có thông tin'}</p></div>
+                                <div><h4 class="font-semibold text-amber-400 mb-2 text-lg">Thành phần hồ sơ</h4><p class="whitespace-pre-wrap text-base">${item.thanh_phan_ho_so || 'Chưa có thông tin'}</p></div>
+                                <div><h4 class="font-semibold text-amber-400 mb-2 text-lg">Trình tự thực hiện</h4><p class="whitespace-pre-wrap text-base">${item.trinh_tu_thuc_hien || 'Chưa có thông tin'}</p></div>
+                                <div><h4 class="font-semibold text-amber-400 mb-2 text-lg">Cách thức thực hiện</h4><p class="whitespace-pre-wrap text-base">${item.cach_thuc_thuc_hien || 'Chưa có thông tin'}</p></div>
+                                <div><h4 class="font-semibold text-amber-400 mb-2 text-lg">Thủ tục liên quan</h4><p class="whitespace-pre-wrap text-base">${item.thu_tuc_lien_quan || 'Không có'}</p></div>
+                                <div><h4 class="font-semibold text-amber-400 mb-2 text-lg">Nguồn</h4><a href="${item.nguon || '#'}" target="_blank" class="text-blue-400 hover:underline break-all">${item.nguon || 'Không có'}</a></div>
                             </div>`;
                         getEl('info-modal-title').innerHTML = item.ten_thu_tuc;
                         getEl('info-modal-body').innerHTML = procedureContent;
@@ -181,56 +164,54 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- LOGIC CHAT (GIẢ LẬP) ---
+    // --- LOGIC CHAT ---
     let messages = [{ role: "assistant", content: "Chào bạn, tôi là trợ lý ảo eGov-Bot." }];
 
-
+    // Hàm tiện ích để chờ
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
     const renderMessages = () => {
-    chatMessagesContainer.innerHTML = '';
-    messages.forEach(msg => {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `flex items-end gap-2 max-w-[80%] ${msg.role === 'user' ? 'self-end flex-row-reverse' : 'self-start'}`;
+        chatMessagesContainer.innerHTML = '';
+        messages.forEach(msg => {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `flex items-end gap-2 max-w-[80%] ${msg.role === 'user' ? 'self-end flex-row-reverse' : 'self-start'}`;
 
-        const messageContent = msg.role === 'assistant' 
-            ? marked.parse(msg.content) 
-            : msg.content;
-        
-        msgDiv.innerHTML = `<div class="prose px-4 py-2 rounded-2xl ${msg.role === 'user' ? 'bg-[#ff6f00] text-white rounded-br-none' : 'bg-[#4d4d4d] text-white/90 rounded-bl-none'}">${messageContent}</div>`;
+            const messageContent = msg.role === 'assistant' 
+                ? marked.parse(msg.content) 
+                : msg.content;
+            
+            msgDiv.innerHTML = `<div class="prose text-xs sm:text-sm md:text-base px-4 py-2 rounded-2xl ${msg.role === 'user' ? 'bg-[#ff6f00] text-white rounded-br-none' : 'bg-[#4d4d4d] text-white/90 rounded-bl-none'}">${messageContent}</div>`;
 
-        chatMessagesContainer.appendChild(msgDiv);
+            chatMessagesContainer.appendChild(msgDiv);
 
-
-        const links = msgDiv.querySelectorAll('a');
-        // Lặp qua từng thẻ và thêm thuộc tính
-        links.forEach(link => {
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
+            const links = msgDiv.querySelectorAll('a');
+            links.forEach(link => {
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+            });
         });
-        // =========================================================
-
-    });
-    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
-};
+        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+    };
     renderMessages();
-
     
-    // --- LOGIC CHAT ĐÃ NÂNG CẤP ĐỂ GỌI API ---
+    // --- LOGIC CHAT NÂNG CẤP VỚI HIỆU ỨNG TRẠNG THÁI VÀ HIỂN THỊ TỪNG KHỐI ---
     chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const userText = chatInput.value.trim();
         if (userText === '') return;
 
-        // Hiển thị tin nhắn người dùng
+        // Thêm tin nhắn người dùng và render
         messages.push({ role: 'user', content: userText });
         renderMessages();
         chatInput.value = '';
+        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 
-        // Hiển thị hiệu ứng "đang gõ..."
-        const typingIndicator = document.createElement('div');
-        typingIndicator.className = 'flex items-end gap-2 max-w-[80%] self-start';
-        typingIndicator.innerHTML = `<div class="px-4 py-2 rounded-2xl bg-[#4d4d4d] text-white/90 rounded-bl-none"><div class="flex items-center gap-1"><span class="w-2 h-2 bg-white/50 rounded-full animate-bounce" style="animation-delay: 0s;"></span><span class="w-2 h-2 bg-white/50 rounded-full animate-bounce" style="animation-delay: 0.15s;"></span><span class="w-2 h-2 bg-white/50 rounded-full animate-bounce" style="animation-delay: 0.3s;"></span></div></div>`;
-        chatMessagesContainer.appendChild(typingIndicator);
+        // Hiển thị trạng thái "Đang truy xuất thông tin..." với hiệu ứng gradient
+        const statusDiv = document.createElement('div');
+        statusDiv.className = 'flex items-end gap-2 max-w-[80%] self-start';
+        // ADDED: class animated-text-gradient
+        statusDiv.innerHTML = `<div class="prose text-xs sm:text-sm md:text-base px-4 py-2 rounded-2xl bg-[#4d4d4d] text-white/90 rounded-bl-none"><i class="animated-text-gradient">Đang truy xuất thông tin...</i></div>`;
+        chatMessagesContainer.appendChild(statusDiv);
         chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 
         try {
@@ -240,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     question: userText,
-                    session_id: "user123"
+                    session_id: "user123" 
                 }),
             });
 
@@ -249,39 +230,36 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const data = await response.json();
-            
-            // Xóa hiệu ứng "đang gõ"
-            chatMessagesContainer.removeChild(typingIndicator);
+            const fullAnswer = data.answer;
 
-            // Thêm toàn bộ câu trả lời vào mảng messages
-            messages.push({ role: 'assistant', content: data.answer });
-            
-            // Hiển thị lại toàn bộ tin nhắn
+            // Cập nhật trạng thái sau khi có câu trả lời, vẫn giữ hiệu ứng
+            const statusContent = statusDiv.querySelector('i'); // Chọn thẻ <i> bên trong
+            statusContent.textContent = 'Đã tìm thấy câu trả lời. Bắt đầu hiển thị...';
+            // Không cần xóa class gradient, nó sẽ tự mất khi statusDiv bị remove
+
+            await sleep(1000); // Chờ 1 giây để người dùng đọc trạng thái
+
+            // Xóa tin nhắn trạng thái khỏi DOM
+            statusDiv.remove();
+
+            // Thêm câu trả lời hoàn chỉnh vào mảng và render lại toàn bộ
+            messages.push({ role: 'assistant', content: fullAnswer });
             renderMessages();
-
-            // --- PHẦN THAY ĐỔI LOGIC CUỘN ---
-            const assistantMessageElement = chatMessagesContainer.lastElementChild;
-            if (assistantMessageElement) {
-                // Vẫn kích hoạt hiệu ứng cho tin nhắn mới (câu trả lời)
-                assistantMessageElement.classList.add('message-enter-active');
-                
-                // Tìm đến tin nhắn của người dùng (nằm ngay trước câu trả lời)
-                const userMessageElement = assistantMessageElement.previousElementSibling;
-                
-                // Cuộn đến tin nhắn của người dùng thay vì tin nhắn của bot
-                if (userMessageElement) {
-                    userMessageElement.scrollIntoView({ behavior: "smooth", block: "start" });
-                }
+            
+            // Thêm hiệu ứng xuất hiện cho tin nhắn cuối cùng (của bot)
+            const lastMessageElement = chatMessagesContainer.lastElementChild;
+            if (lastMessageElement) {
+                lastMessageElement.classList.add('message-enter-active');
             }
-            // --- KẾT THÚC THAY ĐỔI ---
 
         } catch (error) {
             console.error('Lỗi:', error);
-            if (chatMessagesContainer.contains(typingIndicator)) {
-                chatMessagesContainer.removeChild(typingIndicator);
-            }
-            messages.push({ role: 'assistant', content: 'Xin lỗi, tôi đang gặp sự cố kết nối. Vui lòng thử lại sau.' });
-            renderMessages();
+            const errorMessage = 'Xin lỗi, tôi đang gặp sự cố kết nối. Vui lòng thử lại sau.';
+            // Đảm bảo tin nhắn lỗi cũng có hiệu ứng trạng thái
+            statusDiv.querySelector('i').textContent = errorMessage; 
+            messages.push({ role: 'assistant', content: errorMessage });
+            // Cập nhật lại DOM để hiển thị lỗi, không xóa statusDiv
+            // renderMessages() sẽ không được gọi ở đây để giữ lại statusDiv với tin nhắn lỗi
         }
     });
 });
