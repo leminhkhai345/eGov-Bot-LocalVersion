@@ -169,12 +169,11 @@ ${item.thu_tuc_lien_quan || '_Không có_'}
                         
                         modalBody.innerHTML = marked.parse(markdownContent);
                         
-                        // FINAL FIX: Gán màu trực tiếp vào style
                         const headings = modalBody.querySelectorAll('h3');
                         headings.forEach(h3 => {
-                            h3.style.color = '#FBBF24'; // Mã màu của amber-400
+                            h3.style.color = '#FBBF24';
                             h3.style.marginBottom = '0.5rem';
-                            h3.style.fontSize = '1.125rem'; // Tương đương text-lg
+                            h3.style.fontSize = '1.125rem';
                         });
 
                         const links = modalBody.querySelectorAll('a');
@@ -223,7 +222,15 @@ ${item.thu_tuc_lien_quan || '_Không có_'}
                 link.rel = 'noopener noreferrer';
             });
         });
-        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+
+        const allMessageDivs = chatMessagesContainer.children;
+        
+        if (allMessageDivs.length > 1 && messages[messages.length - 1].role === 'assistant') {
+            const userQuestionElement = allMessageDivs[allMessageDivs.length - 2];
+            userQuestionElement.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        }
     };
     renderMessages();
     
