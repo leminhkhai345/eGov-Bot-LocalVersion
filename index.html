@@ -51,7 +51,17 @@
         <div id="chatbot-window" class="modal-content w-[90%] h-[85%] md:w-[80%] md:h-[85%] max-w-4xl max-h-[750px] bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex-col">
             <div class="flex-shrink-0 p-4 border-b border-white/10 flex justify-between items-center"><h3 class="text-lg font-semibold text-white">Trò chuyện với eGov-Bot</h3><button class="modal-close text-white/50 hover:text-white text-2xl">&times;</button></div>
             <div id="chat-messages" class="flex-grow p-4 overflow-y-auto flex flex-col gap-4 custom-scrollbar"></div>
-            <form id="chat-form" class="flex-shrink-0 p-4 border-t border-white/10 flex items-center gap-3"><input type="text" id="chat-input" placeholder="Hỏi tôi về bất cứ điều gì..." class="w-full bg-[#2a2d31] text-white placeholder:text-white/50 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#ffc107]" /><button type="submit" class="w-10 h-10 flex-shrink-0 rounded-full bg-[#ff6f00] hover:bg-[#e66400] flex items-center justify-center text-white transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path></svg></button></form>
+            <form id="chat-form" class="flex-shrink-0 p-4 border-t border-white/10 flex items-center gap-3">
+                <input type="text" id="chat-input" placeholder="Hỏi tôi về bất cứ điều gì..." class="w-full bg-[#2a2d31] text-white placeholder:text-white/50 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#ffc107]" />
+                
+                <button type="button" id="clear-chat-btn" title="Bắt đầu lại" class="w-10 h-10 flex-shrink-0 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center text-white transition-colors">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v6h6"/><path d="M21 12A9 9 0 0 0 6 5.3L3 8"/><path d="M21 22v-6h-6"/><path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"/></svg>
+                </button>
+        
+                <button type="submit" class="w-10 h-10 flex-shrink-0 rounded-full bg-[#ff6f00] hover:bg-[#e66400] flex items-center justify-center text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path></svg>
+                </button>
+            </form>
         </div>
     </div>
 
