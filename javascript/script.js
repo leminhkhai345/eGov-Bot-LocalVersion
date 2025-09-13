@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const homeLinkMobile = getEl('home-link-mobile');
     const guideBtnMobile = getEl('guide-btn-mobile');
     const contactBtnMobile = getEl('contact-btn-mobile');
+    const clearChatBtn = getEl('clear-chat-btn');
     
 
     let lastTriggerElement = null;
@@ -281,5 +282,19 @@ ${item.thu_tuc_lien_quan || '_Không có_'}
             statusDiv.querySelector('i').textContent = errorMessage; 
             messages.push({ role: 'assistant', content: errorMessage });
         }
+    });
+
+    // --- LOGIC CHO NÚT XÓA CHAT ---
+    clearChatBtn.addEventListener('click', () => {
+        // 1. Đặt lại mảng tin nhắn về trạng thái ban đầu
+        messages = [{ role: "assistant", content: "Chào bạn, tôi là trợ lý ảo eGov-Bot." }];
+    
+        // 2. Render lại giao diện chat để hiển thị lời chào
+        renderMessages();
+    
+        // 3. Xóa nội dung trong ô nhập liệu
+        chatInput.value = '';
+    
+        console.log('Đã xóa cuộc trò chuyện.');
     });
 });
