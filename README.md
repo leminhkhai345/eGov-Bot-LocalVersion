@@ -31,6 +31,7 @@ The dataset is collected from the **Vietnamese National Public Service Portal** 
 
 👉 All data files are hosted on Hugging Face Datasets:  
 [https://huggingface.co/datasets/HungBB/egov-bot-data](https://huggingface.co/datasets/HungBB/egov-bot-data)
+The application **automatically downloads** required data on first run.
 
 ---
 
