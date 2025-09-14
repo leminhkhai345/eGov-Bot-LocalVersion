@@ -31,6 +31,7 @@ The dataset is collected from the **Vietnamese National Public Service Portal** 
 
 👉 All data files are hosted on Hugging Face Datasets:  
 [https://huggingface.co/datasets/HungBB/egov-bot-data](https://huggingface.co/datasets/HungBB/egov-bot-data)
+
 The application **automatically downloads** required data on first run.
 
 ---
@@ -113,7 +114,6 @@ You can test the chatbot with the following example questions:
    - After finishing one topic, click **“Reload”** in the UI and ask:  
       “Tôi muốn biết làm thủ tục cấp giấy chứng nhận đăng ký quyền tác giả cần gì?”  
      → The bot will start a new context and answer based on the copyright registration procedure.
-     
 
 ### 7. Project Structure
 
@@ -123,7 +123,6 @@ You can test the chatbot with the following example questions:
 ├── index.html # Web UI
 ├── script.js # Chat logic
 ├── style.css # Styling
-
 
 ### 8. License
 
