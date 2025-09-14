@@ -248,7 +248,7 @@ if __name__ == '__main__':
                 
                 if data:
                     all_procedures_data.append(data)
-                    # print(f"   ✅ Cào thành công: {data.get('ten_thu_tuc', 'N/A')[:70]}...")
+                    # print(f"  Cào thành công: {data.get('ten_thu_tuc', 'N/A')[:70]}...")
                 
                 # Tạm dừng một chút để tránh bị chặn
                 time.sleep(0.5) 
@@ -263,7 +263,7 @@ if __name__ == '__main__':
 
     # --- DỌN DẸP VÀ LƯU KẾT QUẢ ---
     print("\n========================================================")
-    print("🧹 Đóng trình duyệt...")
+    print("Đóng trình duyệt...")
     main_driver.quit()
 
     print(f"Đang lưu tất cả dữ liệu vào file '{FINAL_OUTPUT_FILE}'...")
@@ -274,4 +274,5 @@ if __name__ == '__main__':
         print(f"Đã lưu thành công dữ liệu của {len(all_procedures_data)} thủ tục.")
         print(f"File kết quả: {os.path.abspath(FINAL_OUTPUT_FILE)}")
     except Exception as e:
+
         print(f"Lỗi khi ghi file: {e}")
