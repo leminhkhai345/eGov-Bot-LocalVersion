@@ -292,12 +292,26 @@ ${item.thu_tuc_lien_quan || '_Không có_'}
     });
 
     // LOGIC CHO NÚT XÓA CHAT 
-    clearChatBtn.addEventListener('click', () => {
+    clearChatBtn.addEventListener('click', async () => {
         // Đặt lại mảng tin nhắn về trạng thái ban đầu
         messages = [{ role: "assistant", content: "Chào bạn, tôi là trợ lý ảo eGov-Bot." }];
         renderMessages();
         chatInput.value = '';
     
         console.log('Đã xóa cuộc trò chuyện.');
+        
+        // Gửi request tới backend để clear session hiện tại
+        try {
+            const response = await fetch("https://hungbb-egov-bot-backend.hf.space/clear_session", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ session_id: "user123" }) // nhớ truyền session_id
+            });
+
+            const result = await response.json();
+            console.log("Clear session:", result);
+        } catch (err) {
+            console.error("Không thể clear session:", err);
+        }
     });
 });
