@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Biến để lưu trữ toàn bộ dữ liệu thủ tục
     let allProcedures = [];
 
-    // --- TẢI DỮ LIỆU TỪ FILE JSON ---
+    // TẢI DỮ LIỆU TỪ FILE JSON 
     fetch('./toan_bo_du_lieu_final.json')
         .then(response => {
             if (!response.ok) {
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Không thể tải được cơ sở dữ liệu thủ tục. Vui lòng kiểm tra lại file và đường dẫn. Chức năng tìm kiếm sẽ không hoạt động.');
         });
 
-    // --- Lấy các phần tử DOM ---
+    // Lấy các phần tử DOM 
     const getEl = (id) => document.getElementById(id);
 
     const startChatBtn = getEl('start-chat-btn');
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let lastTriggerElement = null;
 
-    // --- LOGIC MỞ/ĐÓNG CÁC POPUP (MODAL) ---
+    //  LOGIC MỞ/ĐÓNG CÁC POPUP (MODAL) 
     const openModal = (modalElement, triggerElement) => {
         lastTriggerElement = triggerElement;
         const rect = triggerElement.getBoundingClientRect();
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { once: true });
     };
 
-    // --- Gán sự kiện cho các nút ---
+    //  Gán sự kiện cho các nút 
     const showGuideModal = (e) => {
         getEl('info-modal-title').innerHTML = 'Hướng dẫn sử dụng';
         getEl('info-modal-body').innerHTML = `<ul class="list-disc space-y-4 pl-5"><li><strong>Tìm kiếm:</strong> Sử dụng thanh tìm kiếm ở trang chủ để tìm nhanh các thủ tục hành chính theo từ khóa.</li><li><strong>Trò chuyện:</strong> Nhấn nút "Bắt đầu Trò chuyện" để tương tác với trợ lý ảo eGov-Bot.</li><li><strong>Hỏi đáp:</strong> Đặt các câu hỏi rõ ràng, ngắn gọn để nhận được câu trả lời chính xác nhất về các thủ tục bạn quan tâm.</li></ul>`;
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
     homeLinkMobile.addEventListener('click', (e) => { e.preventDefault(); window.location.reload(); });
     startChatBtn.addEventListener('click', (e) => openModal(chatbotContainer, e.currentTarget));
 
-    // --- LOGIC TÌM KIẾM ---
+    // LOGIC TÌM KIẾM 
     searchForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const keyword = searchInput.value.trim().toLowerCase();
@@ -197,7 +197,7 @@ ${item.thu_tuc_lien_quan || '_Không có_'}
         }
     });
 
-    // --- LOGIC CHAT ---
+    // LOGIC CHAT 
     let messages = [{ role: "assistant", content: "Chào bạn, tôi là trợ lý ảo eGov-Bot." }];
 
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -291,15 +291,11 @@ ${item.thu_tuc_lien_quan || '_Không có_'}
         }
     });
 
-    // --- LOGIC CHO NÚT XÓA CHAT ---
+    // LOGIC CHO NÚT XÓA CHAT 
     clearChatBtn.addEventListener('click', () => {
-        // 1. Đặt lại mảng tin nhắn về trạng thái ban đầu
+        // Đặt lại mảng tin nhắn về trạng thái ban đầu
         messages = [{ role: "assistant", content: "Chào bạn, tôi là trợ lý ảo eGov-Bot." }];
-    
-        // 2. Render lại giao diện chat để hiển thị lời chào
         renderMessages();
-    
-        // 3. Xóa nội dung trong ô nhập liệu
         chatInput.value = '';
     
         console.log('Đã xóa cuộc trò chuyện.');
