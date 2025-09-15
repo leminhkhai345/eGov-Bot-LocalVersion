@@ -9,20 +9,20 @@ body {
     --fromY: 0px;
 }
 
-/* === HIỆU ỨNG NỀN MỚI (NHẸ NHÀNG HƠN) === */
+/* HIỆU ỨNG NỀN */
 @keyframes aurora-effect {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
 .animate-aurora {
-    /* Sử dụng các màu pastel và nhẹ nhàng hơn */
+    /* Sử dụng các màu pastel*/
     background: linear-gradient(-45deg, #ffdde1, #ffecd2, #fecfef, #ffc3a0);
     background-size: 400% 400%;
     animation: aurora-effect 20s ease infinite;
 }
 
-/* Hiệu ứng Spotlight vẫn giữ nguyên để tập trung vào giữa */
+/* Hiệu ứng Spotlight */
 .spotlight-effect::before {
     content: '';
     position: absolute;
@@ -93,7 +93,7 @@ body {
 .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); }
 .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 3px; }
 
-/* === ĐỊNH DẠNG CHO NỘI DUNG CHATBOT (MARKDOWN) === */
+/* ĐỊNH DẠNG CHO NỘI DUNG CHATBOT (MARKDOWN)*/
 .prose {
     color: #E5E7EB; 
 }
@@ -105,7 +105,7 @@ body {
 .prose a:hover { color: #F59E0B; }
 .prose p { margin: 0; }
 
-/* === HIỆU ỨNG HIỂN THỊ TIN NHẮN MỚI === */
+/* HIỆU ỨNG HIỂN THỊ TIN NHẮN MỚI*/
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
@@ -114,7 +114,7 @@ body {
   animation: fadeInUp 0.5s ease-out forwards;
 }
 
-/* NEW: Hiệu ứng text gradient động */
+/* Hiệu ứng text gradient động */
 .animated-text-gradient {
     background: linear-gradient(90deg, #ffc107, #ff8c00, #ffc107);
     -webkit-background-clip: text;
