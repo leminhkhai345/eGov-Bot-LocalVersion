@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let allProcedures = [];
 
     // TẢI DỮ LIỆU TỪ FILE JSON 
-    fetch('./toan_bo_du_lieu_final.json')
+    
+    fetch(typeof DATA_JSON_URL !== 'undefined' ? DATA_JSON_URL : '/static/data/toan_bo_du_lieu_final.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Lỗi mạng hoặc không tìm thấy file toan_bo_du_lieu_final.json');
@@ -251,7 +252,7 @@ ${item.thu_tuc_lien_quan || '_Không có_'}
         chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 
         try {
-            const API_ENDPOINT = "https://hungbb-egov-bot-backend.hf.space/chat";
+            const API_ENDPOINT = "http://localhost:7860/chat";
             const response = await fetch(API_ENDPOINT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

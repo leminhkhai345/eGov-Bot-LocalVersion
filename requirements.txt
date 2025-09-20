@@ -1,0 +1,32 @@
+# Flask
+# flask-cors
+# numpy==1.26.4
+# sentence-transformers==2.6.1
+# transformers>=4.30.0
+# torch>=2.0.0
+# faiss-cpu==1.7.4
+# rank_bm25==0.2.2
+# google-generativeai
+# huggingface-hub
+# sentencepiece
+# cachetools==5.3.3
+# gunicorn
+flask==2.3.3
+flask-cors==4.0.0
+cachetools==5.3.3
+numpy==1.26.4
+faiss-cpu==1.7.4
+sentence-transformers==2.6.1
+rank-bm25==0.2.2
+huggingface-hub==0.23.5
+google-generativeai==0.7.2
+
+# added for transformers pipeline (text-classification)
+transformers>=4.34.0
+torch>=2.2.0
+accelerate>=0.24.0
+safetensors>=0.3.0
+
+# optional: only if you will use ONNX models
+# onnxruntime==1.15.1
+nltk

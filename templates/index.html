@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trợ lý ảo eGov-Bot</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="min-h-screen w-full font-sans antialiased relative text-white overflow-hidden">
     <div class="fixed inset-0 -z-10 animate-aurora"></div>
@@ -89,8 +89,10 @@
             </button>
         </nav>
     </footer>
-
+    <script>
+    const DATA_JSON_URL = "{{ url_for('static', filename='data/toan_bo_du_lieu_final.json') }}";
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="javascript/script.js"></script>
+    <script src="{{ url_for('static', filename='javascript/script.js') }}"></script>
 </body>
 </html>

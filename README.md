@@ -72,21 +72,21 @@ The application **automatically downloads** required data on first run.
 
 ### 5.2. Run with Docker (Recommended)
 
+-Make sure you have started Docker Desktop on your computer first
+
 ```bash
 # Build Docker image
 docker build -t egov-bot .
 
 # Run container (replace with your own keys)
-docker run -p 7860:7860 \
-  -e GOOGLE_API_KEY=<your_google_api_key> \
-  -e HF_TOKEN=<your_huggingface_token> \
-  egov-bot
+docker run -p 7860:7860 -e GOOGLE_API_KEY=<your_google_api_key> egov-bot
+
 ```
 
 After running the above commands:
 
 - **Backend Flask API** will be available at: [http://localhost:7860/chat](http://localhost:7860/chat)
-- **Web UI** (from `index.html`, `script.js`, `style.css`) will be served at [http://localhost:7860](http://localhost:7860)  
+- **Web UI** (from `index.html`, `script.js`, `style.css`) will be served at [http://localhost:7860](http://localhost:7860) or (http://127.0.0.1:7860/)
   (make sure these files are inside `/static` or correctly configured in Flask)
 
 👉 In short, the judges only need to run the two Docker commands above to get a fully functional chatbot web app running at `localhost:7860`.
@@ -115,14 +115,30 @@ You can test the chatbot with the following example questions:
       “Tôi muốn biết làm thủ tục cấp giấy chứng nhận đăng ký quyền tác giả cần gì?”  
      → The bot will start a new context and answer based on the copyright registration procedure.
 
+
 ### 7. Project Structure
 
-├── app.py # Flask backend
-├── requirements.txt # Python dependencies
-├── Dockerfile # Docker setup
-├── index.html # Web UI
-├── script.js # Chat logic
-├── style.css # Styling
+egov-bot/
+│── app.py                 # Main Flask application (entry point of backend server)
+│── requirements.txt       # Python dependencies (Flask, transformers, faiss, etc.)
+│── Dockerfile             # Docker instructions to build and run the app in a container
+│── README.md              # Project documentation
+│── LICENSE                # Project license
+│
+├── CrawData/              # (Optional) Scripts for crawling or preprocessing raw data
+│   └── crawdata.py        # Example script to collect or clean data
+│
+├── static/                # Static files accessible by the frontend (served by Flask automatically)
+│   ├── css/
+│   │   └── style.css      # Stylesheet for frontend UI
+│   ├── javascript/
+│   │   └── script.js      # Client-side logic (fetch API, handle search, etc.)
+│   └── data/
+│       └── toan_bo_du_lieu_final.json   # JSON dataset loaded by frontend for search
+│
+└── templates/             # HTML templates (rendered via Flask `render_template`)
+    └── index.html         # Main frontend page (UI of the chatbot / search system)
+
 
 ### 8. License
 
