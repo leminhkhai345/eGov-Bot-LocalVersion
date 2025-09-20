@@ -144,21 +144,37 @@ Example queries in the Search Bar:
 ### 8. Project Structure
 
 egov-bot/
+
 ├── app.py # Main Flask application (backend server entry point)
+
 ├── requirements.txt # Python dependencies (Flask, transformers, faiss, etc.)
+
 ├── Dockerfile # Docker instructions to build and run the app
+
 ├── README.md # Project documentation
+
 ├── LICENSE # Project license  
+
 ├── CrawData/ # (Optional) Scripts for crawling/preprocessing data
+
 │ └── crawdata.py # Example script to collect or clean data
+
 ├── static/ # Static files for the frontend (served by Flask)
+
 │ ├── css/  
+
 │ │ └── style.css # Stylesheet for frontend UI
+
 │ ├── javascript/  
+
 │ │ └── script.js # Client-side logic (fetch API, handle search, etc.)
+
 │ └── data/
+
 │ └── toan_bo_du_lieu_final.json # JSON dataset for frontend search
+
 └── templates/ # HTML templates (rendered via Flask)
+
 └── index.html # Main frontend page (chatbot/search UI)
 
 ### 9. License
