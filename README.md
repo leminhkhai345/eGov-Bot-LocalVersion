@@ -67,21 +67,18 @@ The application **automatically downloads** required data on first run.
 - Python **3.9+** (if running locally) OR Docker installed
 - A valid **Google API Key** (for Gemini model)
 
-  👉 How to get a **Google API Key**:
+  👉 **How to get a Google API Key**
 
-      1. Open [Google Cloud Console](https://console.cloud.google.com/projectcreate?previousPage=%2Fwelcome%3Fproject%3Darched-champion-472703-j1&organizationId=0)
-        and **create a new project**
-
-      - Click **New Project** → choose a name → **Create**.
-
-      2. Go to [Google AI Studio](https://aistudio.google.com/app/apikey).
-
-      3. Click **Create API Key**.
-
-      - Select the project you just created.
-      - Choose **"Create an API key in an existing project"**.
-
-      4. Copy the generated API key and use it when running the app.
+    1. Open [Google Cloud Console](https://console.cloud.google.com/projectcreate?previousPage=%2Fwelcome%3Fproject%3Darched-champion-472703-j1&organizationId=0) and **create a new project**.  
+       - Click **New Project** → choose a name → **Create**.
+    
+    2. Go to [Google AI Studio](https://aistudio.google.com/app/apikey).
+    
+    3. Click **Create API Key**.  
+       - Select the project you just created.  
+       - Choose **"Create an API key in an existing project"**.
+    
+    4. Copy the generated API key and use it when running the app.
 
 ### 5.2. Run with Docker (Recommended)
 
