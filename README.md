@@ -66,13 +66,26 @@ The application **automatically downloads** required data on first run.
 
 - Python **3.9+** (if running locally) OR Docker installed
 - A valid **Google API Key** (for Gemini model)
-- (Optional) Hugging Face token (if dataset or model is private)
 
----
+  👉 How to get a **Google API Key**:
+
+      1. Open [Google Cloud Console](https://console.cloud.google.com/projectcreate?previousPage=%2Fwelcome%3Fproject%3Darched-champion-472703-j1&organizationId=0)
+        and **create a new project**
+
+      - Click **New Project** → choose a name → **Create**.
+
+      2. Go to [Google AI Studio](https://aistudio.google.com/app/apikey).
+
+      3. Click **Create API Key**.
+
+      - Select the project you just created.
+      - Choose **"Create an API key in an existing project"**.
+
+      4. Copy the generated API key and use it when running the app.
 
 ### 5.2. Run with Docker (Recommended)
 
--Make sure you have started Docker Desktop on your computer first
+- Make sure you have started Docker Desktop on your computer first.
 
 ```bash
 # Build Docker image
@@ -93,7 +106,7 @@ After running the above commands:
 
 ## 6. Sample Queries
 
-You can test the chatbot with the following example questions:
+You can click **Bắt đầu trò chuyện** and test the chatbot with the following example questions:
 
 1. **“Làm giấy khai sinh cần gì?”**  
    → The bot should return the required documents for the birth certificate procedure.
@@ -111,36 +124,44 @@ You can test the chatbot with the following example questions:
      → The bot should retain the previous context and return the fee for birth registration.
 
 5. **New Chat example:**
+
    - After finishing one topic, click **“Reload”** in the UI and ask:  
       “Tôi muốn biết làm thủ tục cấp giấy chứng nhận đăng ký quyền tác giả cần gì?”  
      → The bot will start a new context and answer based on the copyright registration procedure.
 
+## 7. Search Bar Example
 
-### 7. Project Structure
+Besides chatbot, you can also use the **Search Bar** (located at the center of the web UI) to directly look up administrative procedures by keyword.
+
+Example queries in the Search Bar:
+
+- **Thủ tục hải quan đối với xuất khẩu, tái xuất xăng dầu cho tàu biển** → Returns relevant customs procedures for exporting or re-exporting petroleum for ships.
+- **Thủ tục cấp Giấy phép vận chuyển hàng hóa nguy hiểm** → Returns procedures for obtaining a permit to transport hazardous goods.
+- **tác giả** → Returns all procedures related to copyright registration.
+
+👉 The search bar is useful when you want to quickly browse all related procedures without going through a step-by-step chat.
+
+### 8. Project Structure
 
 egov-bot/
-│── app.py                 # Main Flask application (entry point of backend server)
-│── requirements.txt       # Python dependencies (Flask, transformers, faiss, etc.)
-│── Dockerfile             # Docker instructions to build and run the app in a container
-│── README.md              # Project documentation
-│── LICENSE                # Project license
-│
-├── CrawData/              # (Optional) Scripts for crawling or preprocessing raw data
-│   └── crawdata.py        # Example script to collect or clean data
-│
-├── static/                # Static files accessible by the frontend (served by Flask automatically)
-│   ├── css/
-│   │   └── style.css      # Stylesheet for frontend UI
-│   ├── javascript/
-│   │   └── script.js      # Client-side logic (fetch API, handle search, etc.)
-│   └── data/
-│       └── toan_bo_du_lieu_final.json   # JSON dataset loaded by frontend for search
-│
-└── templates/             # HTML templates (rendered via Flask `render_template`)
-    └── index.html         # Main frontend page (UI of the chatbot / search system)
+├── app.py # Main Flask application (backend server entry point)
+├── requirements.txt # Python dependencies (Flask, transformers, faiss, etc.)
+├── Dockerfile # Docker instructions to build and run the app
+├── README.md # Project documentation
+├── LICENSE # Project license  
+├── CrawData/ # (Optional) Scripts for crawling/preprocessing data
+│ └── crawdata.py # Example script to collect or clean data
+├── static/ # Static files for the frontend (served by Flask)
+│ ├── css/  
+│ │ └── style.css # Stylesheet for frontend UI
+│ ├── javascript/  
+│ │ └── script.js # Client-side logic (fetch API, handle search, etc.)
+│ └── data/
+│ └── toan_bo_du_lieu_final.json # JSON dataset for frontend search
+└── templates/ # HTML templates (rendered via Flask)
+└── index.html # Main frontend page (chatbot/search UI)
 
-
-### 8. License
+### 9. License
 
 This project is released under the MIT License.
 You are free to use, modify, and distribute with attribution.
