@@ -85,7 +85,7 @@ The application **automatically downloads** required data on first run.
 ### 5.2. Run with Docker (Recommended)
 
 - Make sure you have started Docker Desktop on your computer first.
-- After downloading the source code, unzip it, open a terminal and navigate to the project folder eGov-Bot-LocalVersion.
+- After downloading the source code, open a terminal and navigate to the project folder eGov-Bot-LocalVersion.
 
 ```bash
 # Build Docker image
