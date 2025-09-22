@@ -69,20 +69,23 @@ The application **automatically downloads** required data on first run.
 
   👉 **How to get a Google API Key**
 
-    1. Open [Google Cloud Console](https://console.cloud.google.com/projectcreate?previousPage=%2Fwelcome%3Fproject%3Darched-champion-472703-j1&organizationId=0) and **create a new project**.  
-       - Click **New Project** → choose a name → **Create**.
-    
-    2. Go to [Google AI Studio](https://aistudio.google.com/app/apikey).
-    
-    3. Click **Create API Key**.  
-       - Select the project you just created.  
-       - Choose **"Create an API key in an existing project"**.
-    
-    4. Copy the generated API key and use it when running the app.
+  1. Open [Google Cloud Console](https://console.cloud.google.com/projectcreate?previousPage=%2Fwelcome%3Fproject%3Darched-champion-472703-j1&organizationId=0) and **create a new project**.
+
+     - Click **New Project** → choose a name → **Create**.
+
+  2. Go to [Google AI Studio](https://aistudio.google.com/app/apikey).
+
+  3. Click **Create API Key**.
+
+     - Select the project you just created.
+     - Choose **"Create an API key in an existing project"**.
+
+  4. Copy the generated API key and use it when running the app.
 
 ### 5.2. Run with Docker (Recommended)
 
 - Make sure you have started Docker Desktop on your computer first.
+- After downloading the source code, open a terminal and navigate to the project folder eGov-Bot-LocalVersion.
 
 ```bash
 # Build Docker image
@@ -150,7 +153,7 @@ egov-bot/
 
 ├── README.md # Project documentation
 
-├── LICENSE # Project license  
+├── LICENSE # Project license
 
 ├── CrawData/ # (Optional) Scripts for crawling/preprocessing data
 
@@ -158,11 +161,11 @@ egov-bot/
 
 ├── static/ # Static files for the frontend (served by Flask)
 
-│ ├── css/  
+│ ├── css/
 
 │ │ └── style.css # Stylesheet for frontend UI
 
-│ ├── javascript/  
+│ ├── javascript/
 
 │ │ └── script.js # Client-side logic (fetch API, handle search, etc.)
 
