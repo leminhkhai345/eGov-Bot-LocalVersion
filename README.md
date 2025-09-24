@@ -155,9 +155,17 @@ egov-bot/
 
 ├── LICENSE # Project license
 
-├── CrawData/ # (Optional) Scripts for crawling/preprocessing data
+├── Offline_Pharse # Offline scripts & notebooks for data/model prep
 
 │ └── crawdata.py # Example script to collect or clean data
+
+│ ├── EDA.ipynb # Exploratory Data Analysis (data inspection & stats)
+
+│ ├── Model_Evaluation.py # Evaluate NLP model accuracy/performance
+
+│ ├── embeding_chunking.ipynb # Generate embeddings & chunk text for FAISS index
+
+│ ├── requirements.txt # Dependencies for the Offline_Pharse environment
 
 ├── static/ # Static files for the frontend (served by Flask)
 
@@ -175,7 +183,7 @@ egov-bot/
 
 └── templates/ # HTML templates (rendered via Flask)
 
-└── index.html # Main frontend page (chatbot/search UI)
+│ └── index.html # Main frontend page (chatbot/search UI)
 
 ### 9. License
 
