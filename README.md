@@ -6,7 +6,7 @@
 
 ## 1. Description
 
-**eGov-Bot** is a chatbot system designed to assist citizens and businesses in Vietnam in searching and retrieving information about **administrative procedures** from the [National Public Service Portal](https://dichvucong.gov.vn).
+**eGov-Bot** is a chatbot system designed to assist citizens and businesses in Vietnam in searching and retrieving information about **administrative procedures** from the [Cổng dịch vụ công quốc gia](https://dichvucong.gov.vn).
 
 Key features:
 
@@ -64,7 +64,7 @@ The application **automatically downloads** required data on first run.
 
 ### 5.1. Prerequisites
 
-- Python **3.9+** (if running locally) OR Docker installed
+- Python **3.9+**, Docker installed
 - A valid **Google API Key** (for Gemini model)
 
   👉 **How to get a Google API Key**
