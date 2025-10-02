@@ -709,24 +709,59 @@ def chat():
         }
         return jsonify(error_response), 500
     
+# Tìm đến hàm này trong file app.py và thay thế nó
 @app.route("/save_feedback", methods=["POST"])
 def save_feedback():
     data = request.get_json()
-    if not data or "feedback" not in data:
-        return jsonify({"error": "Thiếu feedback"}), 400
+    if not data:
+        return jsonify({"error": "Thiếu dữ liệu JSON"}), 400
 
-    feedback_type = data["feedback"]
+    # Lấy dữ liệu mới từ frontend (thay vì chỉ lấy 'feedback')
+    new_feedback = data.get('new_feedback')
+    previous_feedback = data.get('previous_feedback')
+
+    # Không cần làm gì nếu không có sự thay đổi
+    if new_feedback == previous_feedback:
+        return jsonify({"status": "no_change"}), 200
 
     try:
-        updated_data = add_user_feedback_data(feedback_type, user_feedback_path)
+        # Mở và đọc file JSON
+        with open(user_feedback_path, "r+") as f:
+            user_feedback_data = json.load(f)
+            summary = user_feedback_data.get('feedback_summary', {'likes': 0, 'dislikes': 0})
+
+            # --- LOGIC CẬP NHẬT MỚI ---
+            
+            # 1. Trừ đi 1 cho phản hồi cũ (nếu có)
+            if previous_feedback == 'like':
+                summary['likes'] = max(0, summary.get('likes', 0) - 1)
+            elif previous_feedback == 'dislike':
+                summary['dislikes'] = max(0, summary.get('dislikes', 0) - 1)
+
+            # 2. Cộng 1 cho phản hồi mới (nếu có)
+            if new_feedback == 'like':
+                summary['likes'] = summary.get('likes', 0) + 1
+            elif new_feedback == 'dislike':
+                summary['dislikes'] = summary.get('dislikes', 0) + 1
+            
+            # --- KẾT THÚC LOGIC CẬP NHẬT ---
+
+            user_feedback_data['feedback_summary'] = summary
+            
+            # Quay lại đầu file để ghi đè nội dung mới
+            f.seek(0)
+            json.dump(user_feedback_data, f, ensure_ascii=False, indent=2)
+            f.truncate()
+
         return jsonify({
             "status": "success",
-            "feedback_type": feedback_type,
-            "summary": updated_data["feedback_summary"]
+            "summary": user_feedback_data["feedback_summary"]
         })
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 400
+        
+    except FileNotFoundError:
+        return jsonify({"error": "Không tìm thấy file user_feedback.json"}), 404
     except Exception as e:
+        logger.error(f"Lỗi khi lưu feedback: {str(e)}")
         return jsonify({"error": f"Lỗi server: {str(e)}"}), 500
     
 @app.route('/user_data/<path:filename>')

@@ -665,56 +665,76 @@ ${proc.thu_tuc_lien_quan || '_Không có_'}
                 // Áp dụng lớp 'active' nếu đã được chọn trước đó
                 if (msg.feedback === 'like') likeBtn.classList.add('active');
                 if (msg.feedback === 'dislike') dislikeBtn.classList.add('active');
+                
+                // =======================================================
+                // ========== BẮT ĐẦU KHỐI MÃ ĐƯỢC SỬA LỖI ==========
+                // =======================================================
 
                 /// --- Xử lý sự kiện Like ---
                 likeBtn.addEventListener('click', () => {
-                    // Toggle trạng thái
-                    if (msg.feedback === 'like') {
+                    const previousFeedback = msg.feedback; // Lưu lại trạng thái cũ
+                    let newFeedback;
+
+                    // Nếu đang "like" thì bấm lần nữa sẽ hủy
+                    if (previousFeedback === 'like') {
+                        newFeedback = null; 
                         msg.feedback = null;
                         likeBtn.classList.remove('active');
                     } else {
+                    // Nếu chưa "like" (hoặc đang "dislike") thì chuyển thành "like"
+                        newFeedback = 'like';
                         msg.feedback = 'like';
                         likeBtn.classList.add('active');
                         dislikeBtn.classList.remove('active');
                     }
-
-                    // Gửi feedback lên server nếu có trạng thái mới
-                    if (msg.feedback) {
-                        fetch("/save_feedback", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                feedback: msg.feedback,         // "like"
-                                message: msg.content,           // nội dung bot trả lời
-                                timestamp: new Date().toISOString()
-                            })
-                        }).catch(err => console.error("Không gửi được feedback:", err));
-                    }
+                    
+                    // Gửi cả trạng thái cũ và mới lên server
+                    fetch("/save_feedback", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            new_feedback: newFeedback,      // Trạng thái mới (có thể là null)
+                            previous_feedback: previousFeedback, // Trạng thái cũ
+                            message: msg.content,
+                            timestamp: new Date().toISOString()
+                        })
+                    }).catch(err => console.error("Không gửi được feedback:", err));
                 });
 
                 // --- Xử lý sự kiện Dislike ---
                 dislikeBtn.addEventListener('click', () => {
-                    if (msg.feedback === 'dislike') {
+                    const previousFeedback = msg.feedback; // Lưu lại trạng thái cũ
+                    let newFeedback;
+
+                    // Nếu đang "dislike" thì bấm lần nữa sẽ hủy
+                    if (previousFeedback === 'dislike') {
+                        newFeedback = null;
                         msg.feedback = null;
                         dislikeBtn.classList.remove('active');
                     } else {
+                    // Nếu chưa "dislike" (hoặc đang "like") thì chuyển thành "dislike"
+                        newFeedback = 'dislike';
                         msg.feedback = 'dislike';
                         dislikeBtn.classList.add('active');
                         likeBtn.classList.remove('active');
                     }
 
-                    if (msg.feedback) {
-                        fetch("/save_feedback", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                feedback: msg.feedback,         // "dislike"
-                                message: msg.content,
-                                timestamp: new Date().toISOString()
-                            })
-                        }).catch(err => console.error("Không gửi được feedback:", err));
-                    }
+                    // Gửi cả trạng thái cũ và mới lên server
+                    fetch("/save_feedback", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            new_feedback: newFeedback,      // Trạng thái mới
+                            previous_feedback: previousFeedback, // Trạng thái cũ
+                            message: msg.content,
+                            timestamp: new Date().toISOString()
+                        })
+                    }).catch(err => console.error("Không gửi được feedback:", err));
                 });
+
+                // =======================================================
+                // ========== KẾT THÚC KHỐI MÃ ĐƯỢC SỬA LỖI ==========
+                // =======================================================
 
                 fbWrap.appendChild(likeBtn);
                 fbWrap.appendChild(dislikeBtn);
