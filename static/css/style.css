@@ -129,3 +129,69 @@ body {
     0% { background-position: 200% 0%; }
     100% { background-position: -200% 0%; }
 }
+/* ---- NAV / home shift ---- */
+#home-link { transition: transform .15s ease; }
+
+/* ---- Placeholder stats panel (ẩn mặc định) ---- */
+.stats-panel {
+  position: fixed;
+  right: 20px;
+  top: 72px; /* cách header ~72px, điều chỉnh nếu header cao hơn */
+  width: 260px;
+  padding: 12px;
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  display: none; /* ẩn mặc định */
+  z-index: 60;
+  font-size: 14px;
+}
+.stats-panel.open { display: block; } /* khi có lớp .open -> hiện */
+
+.stats-panel .stats-title { font-weight: 600; margin-bottom: 8px; }
+.stats-panel .stats-body p { margin: 0; color: #eaeaea; font-size: 13px; }
+
+/* ---- Feedback buttons (hài lòng / không hài lòng) ---- */
+.feedback-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  align-items: center;
+}
+.feedback-btn {
+  display: inline-flex; /* Để căn icon và chữ */
+  align-items: center;
+  gap: 6px; /* Khoảng cách giữa icon và chữ */
+  padding: 5px 12px;
+  border-radius: 9999px; /* Bo tròn */
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.2s ease-in-out;
+}
+.feedback-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+
+/* Trạng thái được chọn (active) */
+.feedback-btn.active {
+  color: #111827; /* Màu chữ tối */
+  border-color: #FBBF24; /* Viền màu vàng */
+  background-color: #FBBF24; /* Nền màu vàng */
+}
+
+/* CSS cho icon bên trong nút active */
+.feedback-btn.active svg {
+  stroke: #111827; /* Icon cũng có màu tối */
+}
+/* CSS cho các lựa chọn trong menu Thống kê */
+.stats-option {
+    font-size: 80%;
+    white-space: nowrap; /* Đảm bảo chữ không bị xuống dòng */
+}

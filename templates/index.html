@@ -5,61 +5,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trợ lý ảo eGov-Bot</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"
 </head>
 <body class="min-h-screen w-full font-sans antialiased relative text-white overflow-hidden">
     <div class="fixed inset-0 -z-10 animate-aurora"></div>
     <div class="fixed inset-0 -z-10 spotlight-effect"></div>
-      
+
     <header class="fixed top-0 left-0 right-0 bg-black/20 backdrop-blur-lg border-b border-white/10 z-20">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-white/90 rounded-lg flex items-center justify-center shadow-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-orange-900"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect><path d="M9 22v-4h6v4"></path><path d="M8 6h.01"></path><path d="M16 6h.01"></path><path d="M12 6h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M16 10h.01"></path><path d="M8 10h.01"></path><path d="M16 14h.01"></path><path d="M8 14h.01"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="text-orange-900">
+                        <rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect>
+                        <path d="M9 22v-4h6v4"></path>
+                        <path d="M8 6h.01"></path>
+                        <path d="M16 6h.01"></path>
+                        <path d="M12 6h.01"></path>
+                        <path d="M12 10h.01"></path>
+                        <path d="M12 14h.01"></path>
+                        <path d="M16 10h.01"></path>
+                        <path d="M8 10h.01"></path>
+                        <path d="M16 14h.01"></path>
+                        <path d="M8 14h.01"></path>
+                    </svg>
                 </div>
                 <div>
                     <h1 class="text-lg font-bold text-white">Trợ lý ảo eGov-Bot</h1>
                     <p class="text-xs text-white/70">Phục vụ mọi người</p>
                 </div>
             </div>
-            <nav class="hidden md:flex space-x-8 text-lg font-medium text-white/80">
-                <a href="#" id="home-link" class="hover:text-white transition-colors">Trang chủ</a>
-                <button id="guide-btn" class="bg-transparent border-none hover:text-white transition-colors">Hướng dẫn</button>
-                <button id="contact-btn" class="bg-transparent border-none hover:text-white transition-colors">Liên hệ</button>
+            <nav class="hidden md:flex items-center space-x-6 text-lg font-medium text-white/80">
+                <a href="#" id="home-link" class="hover:text-white transition-colors"
+                    style="transform: translateX(-6px);">
+                    Trang chủ
+                </a>
+                <div class="relative group">
+                    <span
+                        class="cursor-pointer text-lg font-medium text-white/80 group-hover:text-white transition-colors">
+                        Thống kê
+                    </span>
+                    <div
+                        class="absolute top-full left-1/2 -translate-x-1/2 w-max bg-black/40 backdrop-blur-lg border border-white/10 rounded-lg shadow-xl p-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto z-50">
+                        <ul class="text-white/80 text-center">
+                            <li><button
+                                    class="stats-option w-full text-left px-4 py-2 hover:bg-white/10 rounded-md transition-colors">Những
+                                    thủ tục hay được hỏi</button></li>
+                            <li><button
+                                    class="stats-option w-full text-left px-4 py-2 hover:bg-white/10 rounded-md transition-colors">Mức
+                                    độ hài lòng về phản hồi của chatbot</button></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <button id="guide-btn" class="bg-transparent border-none hover:text-white transition-colors">Hướng
+                    dẫn</button>
+                <button id="contact-btn" class="bg-transparent border-none hover:text-white transition-colors">Liên
+                    hệ</button>
             </nav>
         </div>
     </header>
-
     <main class="pt-24 md:pt-32 pb-16 flex justify-center items-center h-full">
         <div class="container mx-auto px-6">
             <div id="landing-page" class="transition-opacity duration-500 opacity-100">
                 <div class="text-center text-white max-w-4xl mx-auto">
-                    <h2 class="text-4xl md:text-[2.5rem] font-bold mb-4 leading-tight" style="text-shadow: 0 2px 10px rgba(0,0,0,0.3)">Chào mừng đến với eGov-Bot</h2>
-                    <p class="text-lg md:text-xl mb-8 text-white/80">Tra cứu thông tin thủ tục hành chính nhanh chóng, chính xác và dễ hiểu.</p>
-                    <button id="start-chat-btn" class="text-white font-bold py-4 px-10 rounded-full transition-all duration-300 transform hover:scale-110 shadow-lg animated-gradient-button">Bắt đầu Trò chuyện</button>
+                    <h2 class="text-4xl md:text-[2.5rem] font-bold mb-4 leading-tight"
+                        style="text-shadow: 0 2px 10px rgba(0,0,0,0.3)">Chào mừng đến với eGov-Bot</h2>
+                    <p class="text-lg md:text-xl mb-8 text-white/80">Tra cứu thông tin thủ tục hành chính nhanh chóng,
+                        chính xác và dễ hiểu.</p>
+                    <button id="start-chat-btn"
+                        class="text-white font-bold py-4 px-10 rounded-full transition-all duration-300 transform hover:scale-110 shadow-lg animated-gradient-button">Bắt
+                        đầu Trò chuyện</button>
                 </div>
                 <form id="search-form" class="max-w-2xl mx-auto mt-12">
-                    <div class="relative"><input type="text" id="search-input" placeholder="Tìm kiếm nhanh tên thủ tục..." class="w-full pl-5 pr-32 py-3 text-base rounded-full border-2 border-white/20 bg-black/20 text-white placeholder:text-white/50 focus:outline-none focus:border-[#ffc107] transition-colors" /><button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-[#ff6f00] hover:bg-[#e66400] text-white px-5 py-2 text-sm font-semibold transition-colors">Tìm kiếm</button></div>
+                    <div class="relative"><input type="text" id="search-input"
+                            placeholder="Tìm kiếm nhanh tên thủ tục..."
+                            class="w-full pl-5 pr-32 py-3 text-base rounded-full border-2 border-white/20 bg-black/20 text-white placeholder:text-white/50 focus:outline-none focus:border-[#ffc107] transition-colors" /><button
+                            type="submit"
+                            class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-[#ff6f00] hover:bg-[#e66400] text-white px-5 py-2 text-sm font-semibold transition-colors">Tìm
+                            kiếm</button></div>
                 </form>
-                <div id="results-container" class="max-w-2xl mx-auto mt-4 bg-black/20 backdrop-blur-sm rounded-xl shadow-lg p-4 text-white hidden"><h3 id="results-title" class="text-lg font-semibold mb-2">Kết quả:</h3><ul id="results-list" class="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar"></ul></div>
+                <div id="results-container"
+                    class="max-w-2xl mx-auto mt-4 bg-black/20 backdrop-blur-sm rounded-xl shadow-lg p-4 text-white hidden">
+                    <h3 id="results-title" class="text-lg font-semibold mb-2">Kết quả:</h3>
+                    <ul id="results-list" class="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar"></ul>
+                </div>
             </div>
         </div>
     </main>
     
     <div id="chatbot-container" class="modal fixed inset-0 flex justify-center items-center z-30">
         <div class="modal-overlay absolute inset-0 bg-black/50"></div>
-        <div id="chatbot-window" class="modal-content w-[90%] h-[85%] md:w-[80%] md:h-[85%] max-w-4xl max-h-[750px] bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex-col">
-            <div class="flex-shrink-0 p-4 border-b border-white/10 flex justify-between items-center"><h3 class="text-lg font-semibold text-white">Trò chuyện với eGov-Bot</h3><button class="modal-close text-white/50 hover:text-white text-2xl">&times;</button></div>
+        <div id="chatbot-window"
+            class="modal-content w-[90%] h-[85%] md:w-[80%] md:h-[85%] max-w-4xl max-h-[750px] bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex-col">
+            <div class="flex-shrink-0 p-4 border-b border-white/10 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-white">Trò chuyện với eGov-Bot</h3><button
+                    class="modal-close text-white/50 hover:text-white text-2xl">&times;</button>
+            </div>
             <div id="chat-messages" class="flex-grow p-4 overflow-y-auto flex flex-col gap-4 custom-scrollbar"></div>
             <form id="chat-form" class="flex-shrink-0 p-4 border-t border-white/10 flex items-center gap-3">
-                <input type="text" id="chat-input" placeholder="Hỏi tôi về bất cứ điều gì..." class="w-full bg-[#2a2d31] text-white placeholder:text-white/50 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#ffc107]" />
-                
-                <button type="button" id="clear-chat-btn" title="Bắt đầu lại" class="w-10 h-10 flex-shrink-0 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center text-white transition-colors">
-                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v6h6"/><path d="M21 12A9 9 0 0 0 6 5.3L3 8"/><path d="M21 22v-6h-6"/><path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"/></svg>
+                <input type="text" id="chat-input" placeholder="Hỏi tôi về bất cứ điều gì..."
+                    class="w-full bg-[#2a2d31] text-white placeholder:text-white/50 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#ffc107]" />
+
+                <button type="button" id="clear-chat-btn" title="Bắt đầu lại"
+                    class="w-10 h-10 flex-shrink-0 rounded-full bg-gray-600 hover:bg-gray-500 flex items-center justify-center text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 2v6h6" />
+                        <path d="M21 12A9 9 0 0 0 6 5.3L3 8" />
+                        <path d="M21 22v-6h-6" />
+                        <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7" />
+                    </svg>
                 </button>
-        
-                <button type="submit" class="w-10 h-10 flex-shrink-0 rounded-full bg-[#ff6f00] hover:bg-[#e66400] flex items-center justify-center text-white transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path></svg>
+
+                <button type="submit"
+                    class="w-10 h-10 flex-shrink-0 rounded-full bg-[#ff6f00] hover:bg-[#e66400] flex items-center justify-center text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m22 2-7 20-4-9-9-4Z"></path>
+                        <path d="M22 2 11 13"></path>
+                    </svg>
                 </button>
             </form>
         </div>
@@ -67,31 +133,75 @@
 
     <div id="info-modal" class="modal fixed inset-0 flex justify-center items-center z-40">
         <div class="modal-overlay absolute inset-0 bg-black/50"></div>
-        <div id="info-modal-content" class="modal-content w-[90%] md:w-[80%] max-w-4xl max-h-[85vh] bg-black/50 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex-col">
-            <div class="flex-shrink-0 p-4 border-b border-white/10 flex justify-between items-center"><h3 id="info-modal-title" class="text-lg font-semibold text-white">Tiêu đề</h3><button class="modal-close text-white/50 hover:text-white text-2xl">&times;</button></div>
+        <div id="info-modal-content"
+            class="modal-content w-[90%] md:w-[80%] max-w-4xl max-h-[85vh] bg-black/50 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex-col">
+            <div class="flex-shrink-0 p-4 border-b border-white/10 flex justify-between items-center">
+                <h3 id="info-modal-title" class="text-lg font-semibold text-white">Tiêu đề</h3><button
+                    class="modal-close text-white/50 hover:text-white text-2xl">&times;</button>
+            </div>
             <div id="info-modal-body" class="flex-grow p-6 overflow-y-auto custom-scrollbar"></div>
         </div>
     </div>
 
     <footer class="md:hidden fixed bottom-0 left-0 right-0 bg-black/20 backdrop-blur-lg border-t border-white/10 z-20">
         <nav class="container mx-auto px-6 py-3 flex justify-around items-center text-sm font-medium text-white/80">
-            <a href="#" id="home-link-mobile" class="flex flex-col items-center gap-1 hover:text-white transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <a href="#" id="home-link-mobile"
+                class="flex flex-col items-center gap-1 hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
                 <span>Trang chủ</span>
             </a>
-            <button id="guide-btn-mobile" class="flex flex-col items-center gap-1 bg-transparent border-none hover:text-white transition-colors">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            <button id="guide-btn-mobile"
+                class="flex flex-col items-center gap-1 bg-transparent border-none hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
                 <span>Hướng dẫn</span>
             </button>
-            <button id="contact-btn-mobile" class="flex flex-col items-center gap-1 bg-transparent border-none hover:text-white transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <button id="contact-btn-mobile"
+                class="flex flex-col items-center gap-1 bg-transparent border-none hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                    </path>
+                </svg>
                 <span>Liên hệ</span>
             </button>
         </nav>
     </footer>
+    <div id="stats-modal" class="modal fixed inset-0 flex justify-center items-center z-40">
+        <div class="modal-overlay absolute inset-0 bg-black/50"></div>
+        <div id="stats-modal-content"
+            class="modal-content w-[90%] h-[85%] md:w-[80%] md:h-[85%] max-w-4xl max-h-[750px] bg-black/50 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex-col">
+            <div class="flex-shrink-0 p-4 border-b border-white/10 flex justify-between items-center">
+                <h3 id="stats-modal-title" class="text-lg font-semibold text-white"></h3>
+                <button class="modal-close text-white/50 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div id="stats-modal-body" class="flex-grow p-6 overflow-y-auto custom-scrollbar">
+            </div>
+        </div>
+    </div>
+    <aside id="stats-panel" class="stats-panel" aria-hidden="true">
+        <h4 class="stats-title">Thống kê</h4>
+        <div class="stats-body">
+            <p>Placeholder — chèn số liệu ở đây sau.</p>
+        </div>
+    </aside>
     <script>
+    // giữ link tới file dữ liệu chính (bạn đã dùng)
     const DATA_JSON_URL = "{{ url_for('static', filename='data/toan_bo_du_lieu_final.json') }}";
+
+    // Các file JSON nằm trong folder user_data, phục vụ bởi route /user_data/<filename>
+    const POPULAR_JSON_URL = "{{ url_for('user_data_files', filename='popular_procedures.json') }}";
+    const USER_FEEDBACK_URL = "{{ url_for('user_data_files', filename='user_feedback.json') }}";
     </script>
+
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="{{ url_for('static', filename='javascript/script.js') }}"></script>
 </body>

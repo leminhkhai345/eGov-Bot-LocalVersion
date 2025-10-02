@@ -37,7 +37,7 @@ shutil.rmtree("/.cache", ignore_errors=True)
 import torch
 import numpy as np
 import faiss
-from flask import Flask, request, jsonify, Response, render_template
+from flask import Flask, request, jsonify, Response, render_template, send_from_directory, abort
 from flask_cors import CORS
 from sentence_transformers import SentenceTransformer
 from rank_bm25 import BM25Okapi
@@ -98,6 +98,15 @@ FIELD_MAP = {
     "nguon": "Nguồn",
 }
 
+popular_procedures_path = "user_data/popular_procedures.json"
+user_feedback_path = "user_data/user_feedback.json"
+logger.info("Loading popular_procedures data...")
+with open(popular_procedures_path, "r", encoding="utf-8") as f:
+    popular_procedures_data = json.load(f)
+logger.info("Loading user_feedback data...")
+with open(user_feedback_path, "r", encoding="utf-8") as f:
+    user_feedback_data = json.load(f) 
+
 def load_resources():
     """Load all required resources từ Hugging Face Hub"""
     global faiss_index, metadatas, bm25, parent_id_to_chunks, embedding_model, generation_model, generation_model_2, procedure_dict
@@ -132,7 +141,7 @@ def load_resources():
         # Load raw data once
         logger.info("Loading raw JSON data...")
         with open(raw_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
+            data = json.load(f)       
 
         # Dictionary lookup
         procedure_dict = {obj.get("nguon"): obj for obj in data}
@@ -224,23 +233,73 @@ def minmax_scale(arr: List[float]) -> np.ndarray:
     return (arr - arr_min) / (arr_max - arr_min)
 
 def classify_followup(text: str) -> bool:
-    """Follow-up classification: False nếu nhắc thủ tục cụ thể, đăng ký, giấy phép; ngược lại coi là follow-up"""
+    """Follow-up classification:
+    False nếu nhắc thủ tục cụ thể, đăng ký, giấy phép;
+    Ngược lại coi là follow-up.
+    Ngoại lệ: nếu chỉ nói 'thủ tục này/trên' hoặc 'giấy phép này/trên' thì vẫn coi là follow-up.
+    """
     if not text or len(text.strip()) < 2:
         return False
     
     text_norm = normalize_text(text)
 
+    # Ngoại lệ: thủ tục này/trên, giấy phép này/trên => follow-up
+    exception_patterns = [
+        r"thủ\s*tục\s+(này|trên)",
+        r"giấy\s*phép\s+(này|trên)"
+    ]
+    if any(re.search(pattern, text_norm) for pattern in exception_patterns):
+        return True
+
     # Nếu có nhắc đến 1 thủ tục cụ thể hoặc từ khóa đặc thù => new topic
     specific_patterns = [
-        r"\bthủ tục\s+\w+",     # thủ tục đăng ký, thủ tục cấp hộ chiếu...
-        r"\bđăng\s*k(ý|i)\b",   # đăng ký / đăng kí
-        r"\bgiấy\s*phép\b"      # giấy phép lái xe, giấy phép kinh doanh...
+        r"\bthủ\s*tục\s+\w+",     # thủ tục đăng ký, thủ tục cấp hộ chiếu...
+        r"\bđăng\s*k(ý|i)\b",     # đăng ký / đăng kí
+        r"\bgiấy\s*phép\b"        # giấy phép lái xe, giấy phép kinh doanh...
     ]
     if any(re.search(pattern, text_norm) for pattern in specific_patterns):
         return False
 
     # Mặc định coi là follow-up
     return True
+
+def add_popular_procedures_data(name, popular_procedures_data, popular_procedures_path):
+    found = False
+    for proc in popular_procedures_data.get("popular_procedures", []):
+        if proc["name"] == name:
+            proc["total_queries"] += 1
+            found = True
+            break
+
+    if not found:
+        popular_procedures_data.setdefault("popular_procedures", []).append({
+            "name": name,
+            "total_queries": 1
+        })
+
+    # Ghi đè lại file JSON
+    with open(popular_procedures_path, "w", encoding="utf-8") as f:
+        json.dump(popular_procedures_data, f, ensure_ascii=False, indent=2)
+
+def add_user_feedback_data(feedback_type, user_feedback_path):
+    # Đọc dữ liệu cũ
+    try:
+        with open(user_feedback_path, "r", encoding="utf-8") as f:
+            user_feedback_data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        user_feedback_data = {"feedback_summary": {"likes": 0, "dislikes": 0}}
+
+    # Cập nhật
+    if feedback_type == "like":
+        user_feedback_data["feedback_summary"]["likes"] += 1
+    elif feedback_type == "dislike":
+        user_feedback_data["feedback_summary"]["dislikes"] += 1
+    else:
+        raise ValueError("feedback_type phải là 'like' hoặc 'dislike'")
+
+    # Ghi lại file
+    with open(user_feedback_path, "w", encoding="utf-8") as f:
+        json.dump(user_feedback_data, f, ensure_ascii=False, indent=2)
 
 def retrieve_documents(query: str, top_k: int = None) -> List[int]:
     """Document retrieval using FAISS -> BM25 re-rank"""
@@ -317,48 +376,13 @@ def get_full_procedure_text(parent_id: str) -> str:
         for key, value in obj.items():
             if value and key in FIELD_MAP:
                 parts.append(f"{FIELD_MAP[key]}:\n{value.strip()}")
+                if key == "ten_thu_tuc":
+                    add_popular_procedures_data(value.strip(), popular_procedures_data, popular_procedures_path)
         result = "\n\n".join(parts) if parts else "Không tìm thấy thông tin chi tiết."
         embedding_cache[cache_key] = result
         return result
     
     return "Không tìm thấy thủ tục."
-    # """Get full procedure text by parent ID with caching"""
-    # if not parent_id:
-    #     return "Không tìm thấy thủ tục."
-    
-    # cache_key = f"procedure_{parent_id}"
-    # if cache_key in embedding_cache:
-    #     return embedding_cache[cache_key]
-    
-    # try:
-    #     # Load raw data file path
-    #     raw_path = hf_hub_download(
-    #         repo_id=config.HF_REPO_ID,
-    #         filename="toan_bo_du_lieu_final.json",
-    #         repo_type=config.REPO_TYPE
-    #     )
-        
-    #     with open(raw_path, "r", encoding="utf-8") as f:
-    #         data = json.load(f)
-        
-    #     # Find matching procedure
-    #     for obj in data:
-    #         if obj.get("nguon") == parent_id:
-    #             parts = []
-    #             for key, value in obj.items():
-    #                 if value and key in FIELD_MAP:
-    #                     parts.append(f"{FIELD_MAP[key]}:\n{value.strip()}")
-                
-    #             result = "\n\n".join(parts) if parts else "Không tìm thấy thông tin chi tiết."
-    #             embedding_cache[cache_key] = result
-    #             return result
-        
-    #     return "Không tìm thấy thủ tục."
-        
-    # except Exception as e:
-    #     logger.error(f"Failed to get procedure text for {parent_id}: {e}")
-    #     return "Lỗi khi tải thông tin thủ tục."
-
 
 class ContextManager:
     """Manages conversation context and follow-up logic"""
@@ -684,6 +708,51 @@ def chat():
             "fallback": "Xin lỗi, hệ thống đang gặp sự cố. Vui lòng thử lại sau."
         }
         return jsonify(error_response), 500
+    
+@app.route("/save_feedback", methods=["POST"])
+def save_feedback():
+    data = request.get_json()
+    if not data or "feedback" not in data:
+        return jsonify({"error": "Thiếu feedback"}), 400
+
+    feedback_type = data["feedback"]
+
+    try:
+        updated_data = add_user_feedback_data(feedback_type, user_feedback_path)
+        return jsonify({
+            "status": "success",
+            "feedback_type": feedback_type,
+            "summary": updated_data["feedback_summary"]
+        })
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"error": f"Lỗi server: {str(e)}"}), 500
+    
+@app.route('/user_data/<path:filename>')
+def user_data_files(filename):
+    """
+    Phục vụ file từ thư mục user_data một cách an toàn.
+    Chống directory traversal bằng cách so sánh đường dẫn tuyệt đối.
+    """
+    user_data_dir = os.path.join(app.root_path, 'user_data')
+
+    # Tạo đường dẫn tuyệt đối đến file requested
+    requested_path = os.path.abspath(os.path.join(user_data_dir, filename))
+    user_data_dir_abs = os.path.abspath(user_data_dir)
+
+    # Bảo đảm requested_path nằm trong user_data_dir
+    # thêm os.sep để tránh tình huống user_data_dir = /foo/bar và requested_path = /foo/barista
+    if not (requested_path == user_data_dir_abs or requested_path.startswith(user_data_dir_abs + os.sep)):
+        # Nếu không nằm trong thư mục user_data -> 404
+        abort(404)
+
+    # Kiểm tra tồn tại file
+    if not os.path.isfile(requested_path):
+        abort(404)
+
+    # Trả file (Flask sẽ tự xử lý Content-Type)
+    return send_from_directory(user_data_dir, filename, as_attachment=False)
 
 @app.route("/clear_session", methods=["POST"])
 def clear_session():
