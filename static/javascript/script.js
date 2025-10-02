@@ -220,7 +220,7 @@ ${proc.thu_tuc_lien_quan || '_Không có_'}
                 statsModalBody.innerHTML = '<p>Đang tải danh sách thủ tục được hỏi nhiều nhất...</p>';
 
                 try {
-                    const POP_URL = (typeof POPULAR_JSON_URL !== 'undefined') ? POPULAR_JSON_URL : '/static/data/popular_procedures.json';
+                    const POP_URL = (typeof POPULAR_JSON_URL !== 'undefined') ? POPULAR_JSON_URL : 'user_data/popular_procedures.json';
                     const resp = await fetch(POP_URL);
                     if (!resp.ok) throw new Error('Không tải được file popular_procedures.json (HTTP ' + resp.status + ')');
                     const json = await resp.json();

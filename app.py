@@ -709,6 +709,19 @@ def chat():
         }
         return jsonify(error_response), 500
     
+@app.route("/update_popular", methods=["POST"])
+def update_popular():
+    try:
+        data = request.get_json(force=True)
+        name = data.get("name", "").strip()
+        if not name:
+            return jsonify({"error": "Thiếu tên thủ tục"}), 400
+
+        add_popular_procedures_data(name, popular_procedures_data, popular_procedures_path)
+        return jsonify({"status": "success", "name": name})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 # Tìm đến hàm này trong file app.py và thay thế nó
 @app.route("/save_feedback", methods=["POST"])
 def save_feedback():
